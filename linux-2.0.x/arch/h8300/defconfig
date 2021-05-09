@@ -1,0 +1,127 @@
+#
+# Automatically generated make config: don't edit
+#
+CONFIG_UCLINUX=y
+
+#
+# Code maturity level options
+#
+CONFIG_EXPERIMENTAL=y
+
+#
+# Platform dependant setup
+#
+# CONFIG_H83002 is not set
+CONFIG_H83007=y
+# CONFIG_H83048 is not set
+# CONFIG_H83068 is not set
+CONFIG_CLK_FREQ=16000
+# CONFIG_RAMKERNEL is not set
+CONFIG_ROMKERNEL=y
+
+#
+# General setup
+#
+CONFIG_NET=y
+CONFIG_SYSVIPC=y
+# CONFIG_REDUCED_MEMORY is not set
+CONFIG_BINFMT_FLAT=y
+# CONFIG_KERNEL_ELF is not set
+
+#
+# Floppy, IDE, and other block devices
+#
+CONFIG_BLK_DEV_BLKMEM=y
+# CONFIG_BLK_DEV_IDE is not set
+
+#
+# Additional Block/FLASH Devices
+#
+# CONFIG_BLK_DEV_LOOP is not set
+# CONFIG_BLK_DEV_MD is not set
+CONFIG_BLK_DEV_RAM=y
+# CONFIG_RD_RELEASE_BLOCKS is not set
+# CONFIG_DEV_FLASH is not set
+# CONFIG_BLK_DEV_NFA is not set
+
+#
+# Networking options
+#
+# CONFIG_FIREWALL is not set
+# CONFIG_NET_ALIAS is not set
+CONFIG_INET=y
+# CONFIG_IP_FORWARD is not set
+# CONFIG_IP_MULTICAST is not set
+# CONFIG_SYN_COOKIES is not set
+# CONFIG_IP_ACCT is not set
+# CONFIG_IP_ROUTER is not set
+# CONFIG_NET_IPIP is not set
+
+#
+# (it is safe to leave these untouched)
+#
+# CONFIG_INET_PCTCP is not set
+# CONFIG_INET_RARP is not set
+# CONFIG_NO_PATH_MTU_DISCOVERY is not set
+CONFIG_IP_NOSR=y
+# CONFIG_SKB_LARGE is not set
+
+#
+#  
+#
+# CONFIG_IPX is not set
+# CONFIG_ATALK is not set
+# CONFIG_AX25 is not set
+# CONFIG_BRIDGE is not set
+# CONFIG_NETLINK is not set
+
+#
+# Network device support
+#
+CONFIG_NETDEVICES=y
+# CONFIG_DUMMY is not set
+CONFIG_SLIP=y
+CONFIG_SLIP_COMPRESSED=y
+# CONFIG_SLIP_SMART is not set
+# CONFIG_SLIP_MODE_SLIP6 is not set
+CONFIG_PPP=y
+
+#
+# CCP compressors for PPP are only built as modules.
+#
+# CONFIG_EQUALIZER is not set
+# CONFIG_UCCS8900 is not set
+# CONFIG_SMC9194 is not set
+# CONFIG_NE2000 is not set
+
+#
+# Filesystems
+#
+# CONFIG_QUOTA is not set
+# CONFIG_MINIX_FS is not set
+# CONFIG_EXT_FS is not set
+CONFIG_EXT2_FS=y
+# CONFIG_XIA_FS is not set
+# CONFIG_NLS is not set
+CONFIG_PROC_FS=y
+CONFIG_NFS_FS=y
+# CONFIG_ROOT_NFS is not set
+# CONFIG_SMB_FS is not set
+# CONFIG_HPFS_FS is not set
+# CONFIG_SYSV_FS is not set
+# CONFIG_AUTOFS_FS is not set
+# CONFIG_AFFS_FS is not set
+CONFIG_ROMFS_FS=y
+# CONFIG_JFFS_FS is not set
+# CONFIG_UFS_FS is not set
+
+#
+# Character devices
+#
+CONFIG_HITACHI_SCI=y
+# CONFIG_WATCHDOG is not set
+
+#
+# Kernel hacking
+#
+# CONFIG_PROFILE is not set

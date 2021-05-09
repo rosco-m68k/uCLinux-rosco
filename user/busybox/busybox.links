@@ -1,0 +1,3 @@
+/sbin/ifconfig
+/bin/ping
+/sbin/route

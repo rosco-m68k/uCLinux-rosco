@@ -1,0 +1,109 @@
+README.ppa (c) 1996   Grant R. Guenther,  grant@torque.net
+README.ppa (c) 1998   David J. Campbell,  campbell@torque.net
+
+
+         The IOMEGA PPA3 parallel port SCSI Host Bus Adapter
+
+                     as embedded in the ZIP drive
+
+
+This README documents the Linux support for the parallel port version of
+IOMEGA's ZIP100.  The ZIP100 is an inexpensive and popular, but relatively 
+low performance, removable medium disk device.  The drive is also available
+as a regular SCSI device, but the driver documented here is for the
+parallel port version.  IOMEGA implemented the parallel port version by
+integrating (or emulating ?) their PPA3 parallel to SCSI converter into
+the ZIP drive.
+
+I have implemented a low-level driver, ppa.c,  for this parallel port 
+host bus adapter, thereby supporting the parallel port ZIP drive as a 
+regular SCSI device under Linux.
+
+It is possible that this driver will also work with the original PPA3
+device (to access a CDrom, for instance). But, the PPA3 is hard to find 
+and costs as much as the ZIP drive itself, so no-one has actually tried
+this, to the best of my knowledge.
+
+The driver was developed without the benefit of any technical specifications 
+for the interface.  Instead, a modified version of DOSemu was used to 
+monitor the protocol used by the DOS driver, 'guest.exe', for this adapter.
+I have no idea how my programming model relates to IOMEGA's design.
+(One technical consequence of this method:  I have never observed a
+SCSI message byte in the protocol transactions between guest.exe and
+the ZIP drive, so I do not know how they are delivered.  My working 
+hypothesis is that we don't have to worry about them if we don't
+send linked commands to the drive.)
+
+I'd like to thank Byron Jeff (byron@cc.gatech.edu) for publishing his
+observation that the 'guest' driver loads under DOSemu.  His remark was
+the stimulus that began this project.
+
+For information about using the ZIP drive, please read the generic
+instructions in the SCSI-HOWTO and the man pages for the normal disk
+management tools,  fdisk, mkfs, mount, umount, etc.  There is a mini-HOWTO
+circulating concerning the use of the normal SCSI version of the ZIP
+drive, most of its comments will apply to disks connected through the
+ppa driver as well.
+
+>------------------------------------------------------------------------<
+David Campbell writes:
+
+Since the original was released by Grant several people have made many minor
+modifications:
+
+	a) Support for EPP
+	b) Autoprobing known parallel ports
+	c) Parallel port sharing with other devices (see notes)
+
+It has been found that the JAZ Traveller also uses the VPI0 interface chipset
+(a reworked ppa3). This driver will also support this device without
+modifications.
+
+Please note that the ZIP Plus drive uses a VPI2 interface chipset (VPI1 never
+made it out of the Iomega development lab). A driver for this device exists,
+check my web page at http://www.torque.net/~campbell for further details.
+
+                                 -<-->-
+
+Built-in drivers accept parameters using this LILO/LOADLIN command line
+syntax (omitted parameters retain their default values):
+
+        ppa=base,mode[,sg_buffer_size]
+
+For example:    ppa=0x378,1
+
+The modes are as follows:
+	0       Autodetect mode
+	1       work in standard 4 bit mode
+	2       PS/2 byte mode
+	3       EPP mode, 8 bit
+	4       EPP mode, 16 bit
+	5       EPP mode, 32 bit
+
+If ppa is built as a module there is currently no method of changing the
+operation of the driver. Basically there is no need (unless you have a very
+strange parallel port address).
+
+                                 -<-->-
+
+Using the ZIP drive and a printer either requires two parallel ports (one
+for each device) or use of the parport driver (which can be found in the
+2.1.x kernels).
+
+In the first case compile the lp driver as a module and load it after ppa.
+Alternatively specify which ports the lp driver should use by the LILO/LOADLIN
+options:
+        lp=base0[,irq0[,base1[,irq1[,base2[,irq2]]]]]
+
+                                 -<-->-
+
+Mainboard buggy chipset hall of shame: [information courtesy of Iomega]
+
+	National Semiconductor PC87306 rev ID 0x70, 0x71
+	Winbond xx837
+
+The above chipsets are known to have problems using EPP. Note that the
+National Semicondutor problems only affect early batches of PC87306 which
+should really never made it to market (a run for mainboard developers).
+>------------------------------------------------------------------------<
+

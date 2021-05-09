@@ -1,0 +1,180 @@
+#
+# For a description of the syntax of this configuration file,
+# see the Configure script.
+#
+mainmenu_name "uClinux/i960 (w/o MMU) Kernel Configuration"
+
+define_bool CONFIG_UCLINUX y
+define_bool CONFIG_64BIT_MATH n
+
+mainmenu_option next_comment
+comment 'Code maturity level options'
+bool 'Prompt for development and/or incomplete code/drivers' CONFIG_EXPERIMENTAL
+endmenu
+
+mainmenu_option next_comment
+comment 'Loadable module support'
+bool 'Enable loadable module support' CONFIG_MODULES
+if [ "$CONFIG_MODULES" = "y" ]; then
+  bool 'Set version information on all symbols for modules' CONFIG_MODVERSIONS
+  bool 'Kernel daemon support (e.g. autoload of modules)' CONFIG_KERNELD
+fi
+endmenu
+
+bool 'Prompt for command-line options at boot-time' CONFIG_CMDLINE_PROMPT
+
+mainmenu_option next_comment
+comment 'Platform dependant setup'
+
+choice 'CPU' \
+  "i960Sx CONFIG_I960JX \
+   i960Kx CONFIG_I960KX \
+   i960MC CONFIG_I960MC \
+   i960Cx CONFIG_I960CX \
+   i960Jx CONFIG_I960JX \
+   i960Hx CONFIG_I960HX \
+   i960VH CONFIG_I960VH \
+   i960VH CONFIG_I960VH \
+   i960RM CONFIG_I960RM \
+   80303  CONFIG_80303" 80303
+
+comment 'Platform'
+
+if [ "$CONFIG_I960VH" = "y" ]; then
+  define_bool CONFIG_COMPILE_WITH_CTOOLS y
+
+  bool '   Cyclone evaluation board with VH processor' CONFIG_CYVH
+
+  if [ "$CONFIG_CYVH" = "y" ];then
+    choice '    Installed RAM' \
+      "4MB CONFIG_CYVH_4MB \
+       8MB CONFIG_CYVH_8MB \
+       16MB CONFIG_CYVH_16MB \
+       32MB CONFIG_CYVH_32MB" 4MB
+    bool '      Use Mon960 to bootstrap kernel' CONFIG_MON960
+    if [ "$CONFIG_MON960" = "y" ]; then
+	bool '        Use Mon960 for a console' CONFIG_MON960_CONSOLE
+    fi
+  fi
+fi
+
+
+
+if [ "$CONFIG_I960RM" = "y" ]; then
+comment 'PROMISE SX6 Super Track 100 platform'
+  define_bool CONFIG_COMPILE_WITH_CTOOLS y
+
+  bool '   PROMISE SX6 evaluation board with RM processor' CONFIG_SX6
+  if [ "$CONFIG_SX6" = "y" ];then
+    choice '    Installed RAM' \
+      "4MB CONFIG_CYVH_4MB \
+       8MB CONFIG_CYVH_8MB \
+       16MB CONFIG_CYVH_16MB \
+       32MB CONFIG_CYVH_32MB" 4MB
+    bool '      Use Mon960 to bootstrap kernel' CONFIG_MON960
+    if [ "$CONFIG_MON960" = "y" ]; then
+	bool '        Use Mon960 for a console' CONFIG_MON960_CONSOLE
+    fi
+  fi
+fi
+
+if [ "$CONFIG_80303" = "y" ]; then
+comment 'Intel 80303 IO processor'
+  define_bool CONFIG_COMPILE_WITH_CTOOLS n
+
+  bool '   Intel IQ80303 evaluation with 80303' CONFIG_IQ80303
+  if [ "$CONFIG_IQ80303" = "y" ];then
+    choice '    Installed RAM' \
+      "64MB CONFIG_CYVH_64MB \
+       32MB CONFIG_CYVH_32MB" 32MB
+    bool '      Use Mon960 to bootstrap kernel' CONFIG_MON960
+    if [ "$CONFIG_MON960" = "y" ]; then
+	bool '        Use Mon960 for a console' CONFIG_MON960_CONSOLE
+    fi
+  fi
+fi
+
+endmenu
+
+mainmenu_option next_comment
+comment 'General setup'
+
+bool 'Kernel math emulation' CONFIG_MATH_EMULATION
+bool 'Networking support' CONFIG_NET
+bool 'Limit memory to low 16MB' CONFIG_MAX_16M
+
+if [ "$CONFIG_CYVH" = "y" -o "$CONFIG_SX6" = "y" -o "$CONFIG_IQ80303" = "y" ];then
+  bool 'PCI bios support' CONFIG_PCI
+  if [ "$CONFIG_PCI" = "y" ]; then
+    if [ "$CONFIG_EXPERIMENTAL" = "y" ]; then
+      bool '   PCI bridge optimization (experimental)' CONFIG_PCI_OPTIMIZE
+    fi
+  fi
+fi
+
+bool 'System V IPC' CONFIG_SYSVIPC
+bool 'Reduced memory footprint' CONFIG_REDUCED_MEMORY
+tristate 'Kernel support for flat binaries' CONFIG_BINFMT_FLAT
+
+endmenu
+
+source drivers/block/Config.in
+
+if [ "$CONFIG_NET" = "y" ]; then
+  source net/Config.in
+fi
+
+mainmenu_option next_comment
+comment 'SCSI support'
+
+tristate 'SCSI support' CONFIG_SCSI
+
+if [ "$CONFIG_SCSI" != "n" ]; then
+  source drivers/scsi/Config.in
+fi
+endmenu
+
+if [ "$CONFIG_NET" = "y" ]; then
+  mainmenu_option next_comment
+  comment 'Network device support'
+
+  bool 'Network device support' CONFIG_NETDEVICES
+  if [ "$CONFIG_NETDEVICES" = "y" ]; then
+    source drivers/net/Config.in
+  fi
+  endmenu
+fi
+
+mainmenu_option next_comment  
+comment 'ISDN subsystem'
+
+tristate 'ISDN support' CONFIG_ISDN
+if [ "$CONFIG_ISDN" != "n" ]; then
+  source drivers/isdn/Config.in
+fi
+endmenu
+
+source fs/Config.in
+
+source drivers/char/Config.in
+
+mainmenu_option next_comment
+comment 'Sound'
+  
+tristate 'Sound card support' CONFIG_SOUND
+if [ "$CONFIG_SOUND" != "n" ]; then
+  source drivers/sound/Config.in
+fi
+endmenu
+
+mainmenu_option next_comment
+comment 'Kernel hacking'
+
+bool 'Debug kmalloc/kfree' CONFIG_DEBUG_MALLOC
+bool 'Kernel IRQ profiling' CONFIG_PROF_IRQ
+if [ "$CONFIG_PROFILE" = "y" ]; then
+  int ' Profile shift count' CONFIG_PROFILE_SHIFT 2
+  bool 'Use fast second timer for profiling' CONFIG_HIGHPROFILE
+fi
+
+endmenu

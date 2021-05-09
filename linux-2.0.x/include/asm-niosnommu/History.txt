@@ -1,0 +1,93 @@
+------------------------------------------------------------------------------
+18-Dec-00	Vic
+
+ported to date:
+
+File		Original	Conversion:
+----		--------	-----------
+atomic.h	sparcnommu	none required (atomic.c has inline code)
+bitops.h	sparcnommu	none required
+bugs.h		m68knommu	none required
+delay.h		i960		loop/delay values not calculated yet
+errno.h		m68knommu	none required (that I know of)
+fcntl.h		m68knommu	none required (that I know of)
+ioctl.h		m68knommu	none required
+mmu_context.h	sparcnommu	comment out unneeded stuff (maybe)
+socket.h	sparcnommu	none required
+sockios.h	sparcnommu	none required
+statfs.h	m68knommu	none required
+string.h	sparcnommu	none req'd (maybe add inline assembler later)
+
+------------------------------------------------------------------------------
+
+19-Dec-00	Vic
+
+ported to date:
+
+File		Original	Conversion:
+----		--------	-----------
+shmparam.h	i960		none required (not used in uClinux -see NO_MM)
+pgtable.h	N/A		unused by Nios (MM stuff)
+posix_types.h	sparcnommu	none required
+unaligned.h	m68knommu	remove "can do unaligned" code & conditional
+
+------------------------------------------------------------------------------
+
+20-Dec-00	Vic
+
+ported to date:
+
+File		Original	Conversion:
+----		--------	-----------
+traps.h		sparcnommu	stripped of everything but one symbol used by
+				 "traps.c" - this may need work later ...
+asi.h		sparcnommu	deleted (unneeded)
+contregs.h	...		...
+kgdb.h		...		...
+
+------------------------------------------------------------------------------
+
+03-Jan-2001	Vic
+
+ported to date:
+
+File		Original	Conversion:
+----		--------	-----------
+asmmacro.h	sparcnommu	stripped down - more to be added from nios sdk
+				 when needed.
+
+------------------------------------------------------------------------------
+
+05-Jan-2001	Vic
+
+ported to date:
+
+File		Original	Conversion:
+----		--------	-----------
+unistd.h	m68knommu	modify inline assembler to nios syntax (only
+				 partially complete)
+user.h		i960		none required (renamed unused fp struct)
+
+------------------------------------------------------------------------------
+
+08-Jan-2001	Vic
+
+ported to date:
+
+File		Original	Conversion:
+----		--------	-----------
+segment.h	sparcnommu	none required (review use of "active_ds") some
+				 time later ...
+
+------------------------------------------------------------------------------
+
+16-Feb-2001	Vic
+
+ported to date:
+
+File		Original	Conversion:
+----		--------	-----------
+nios.h		sparcnommu	converted from "leon.h" - i/o page registers
+
+------------------------------------------------------------------------------
+

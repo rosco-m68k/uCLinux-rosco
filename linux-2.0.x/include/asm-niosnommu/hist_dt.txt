@@ -1,0 +1,13 @@
+----------------------------------------------------------------------
+Dgt Nios port:
+
+           File          Original    Notes:
+           ----          --------    -----
+20Dec2000  byteorder.h   asm-mips    Little endian: Most significant
+                                      bytes at higher addresses
+09Feb2001  a.out.h       Sparcnommu  Nios: probably wind up unused...
+20Dec2000  contregs.h    N/A         Nios: Unused (MMU)
+20Dec2000  head.h        Sparcnommu  Nios: probably wind up unused...
+20Dec2000  page.h        Sparcnommu  A few symbols retained...
+07Feb2001  winmacro.h    Sparcnommu  Fwd Vic's modified version.
+----------------------------------------------------------------------

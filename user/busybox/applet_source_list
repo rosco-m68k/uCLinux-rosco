@@ -1,0 +1,1 @@
+APPLET_SOURCES := ifconfig.c ping.c route.c 

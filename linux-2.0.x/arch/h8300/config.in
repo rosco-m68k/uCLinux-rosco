@@ -1,0 +1,186 @@
+#
+# For a description of the syntax of this configuration file,
+# see the Configure script.
+#
+mainmenu_name 'uClinux/h8300 (w/o MMU) Kernel Configuration'
+
+define_bool CONFIG_UCLINUX y
+
+mainmenu_option next_comment
+comment 'Code maturity level options'
+bool 'Prompt for development and/or incomplete code/drivers' CONFIG_EXPERIMENTAL
+endmenu
+
+# mainmenu_option next_comment
+# comment 'Loadable module support'
+# bool 'Enable loadable module support' CONFIG_MODULES
+# if [ "$CONFIG_MODULES" = "y" ]; then
+#   bool 'Set version information on all symbols for modules' CONFIG_MODVERSIONS
+#   bool 'Kernel daemon support (e.g. autoload of modules)' CONFIG_KERNELD
+# fi
+# endmenu
+
+mainmenu_option next_comment
+comment 'Target Selection'
+source arch/h8300/target_config.in
+endmenu
+
+if [ "$CONFIG_BOARD_GENERIC" = "y" ]; then
+
+mainmenu_option next_comment
+comment 'Platform dependant setup'
+
+  choice 'CPU' \
+	  "H8/3002			CONFIG_H83002 \
+  	   H8/3006,3007,gdb_simulator	CONFIG_H83007 \
+	   H8/3044,3045,3046,3047,3048	CONFIG_H83048 \
+           H8/3065,3066,3067,3068	CONFIG_H83068" 
+
+  int 'Clock Frequency' CONFIG_CLK_FREQ
+
+choice 'Kernel executes from' \
+	"RAM	CONFIG_RAMKERNEL \
+	 ROM	CONFIG_ROMKERNEL" ROM
+
+endmenu
+fi
+
+if [ "$CONFIG_H83002" = "y" -o "$CONFIG_H83007" = "y" -o \
+     "$CONFIG_H83048" = "y" -o "$CONFIG_H83068" = "y" ]; then
+define_bool CONFIG_CPU_H8300H y
+fi
+
+mainmenu_option next_comment
+comment 'General setup'
+
+bool 'Networking support' CONFIG_NET
+bool 'System V IPC' CONFIG_SYSVIPC
+bool 'Reduced memory footprint' CONFIG_REDUCED_MEMORY
+tristate 'Kernel support for flat binaries' CONFIG_BINFMT_FLAT
+# tristate 'Kernel support for a.out binaries' CONFIG_BINFMT_AOUT
+# tristate 'Kernel support for ELF binaries' CONFIG_BINFMT_ELF
+bool 'Compile kernel as ELF - if your GCC is ELF-GCC' CONFIG_KERNEL_ELF
+endmenu
+
+#
+# Block device driver configuration
+#
+mainmenu_option next_comment
+comment 'Floppy, IDE, and other block devices'
+
+tristate 'ROM disk memory block device' CONFIG_BLK_DEV_BLKMEM
+# tristate 'Normal floppy disk support' CONFIG_BLK_DEV_FD
+bool 'IDE harddisk support' CONFIG_BLK_DEV_IDE
+if [ "$CONFIG_BLK_DEV_IDE" = "y" ]; then
+  bool '   Include IDE/ATAPI CDROM support' CONFIG_BLK_DEV_IDECD
+  bool '   Include IDE/ATAPI TAPE support' CONFIG_BLK_DEV_IDETAPE
+  bool '   Include IDE/ATAPI FLOPPY support (new)' CONFIG_BLK_DEV_IDEFLOPPY
+fi
+
+comment 'Additional Block/FLASH Devices'
+
+tristate 'Loopback device support' CONFIG_BLK_DEV_LOOP
+bool 'Multiple devices driver support' CONFIG_BLK_DEV_MD
+if [ "$CONFIG_BLK_DEV_MD" = "y" ]; then
+  tristate '   Linear (append) mode' CONFIG_MD_LINEAR
+  tristate '   RAID-0 (striping) mode' CONFIG_MD_STRIPED
+fi
+tristate 'RAM disk support' CONFIG_BLK_DEV_RAM
+if [ "$CONFIG_BLK_DEV_RAM" = "y" ]; then
+  bool '   Release empty RAM disk blocks' CONFIG_RD_RELEASE_BLOCKS
+#  bool '   Initial RAM disk (initrd) support' CONFIG_BLK_DEV_INITRD
+fi
+tristate 'FLASH device support' CONFIG_DEV_FLASH
+if [ "$CONFIG_DEV_FLASH" = "y" ]; then
+  bool '   FLASH Block device' CONFIG_BLK_DEV_FLASH
+  bool '   FLASH Character device' CONFIG_CHR_DEV_FLASH
+fi
+tristate 'NFA NAND-FLASH device support' CONFIG_BLK_DEV_NFA
+endmenu
+
+if [ "$CONFIG_NET" = "y" ]; then
+  source net/Config.in
+fi
+
+if [ "$CONFIG_NET" = "y" ]; then
+
+mainmenu_option next_comment
+comment 'Network device support'
+
+bool 'Network device support' CONFIG_NETDEVICES
+if [ "$CONFIG_NETDEVICES" = "y" ]; then
+#
+# Network device configuration
+#
+tristate 'Dummy net driver support' CONFIG_DUMMY
+tristate 'SLIP (serial line) support' CONFIG_SLIP
+if [ "$CONFIG_SLIP" != "n" ]; then
+  bool ' CSLIP compressed headers' CONFIG_SLIP_COMPRESSED
+  bool ' Keepalive and linefill' CONFIG_SLIP_SMART
+  bool ' Six bit SLIP encapsulation' CONFIG_SLIP_MODE_SLIP6
+fi
+tristate 'PPP (point-to-point) support' CONFIG_PPP
+if [ ! "$CONFIG_PPP" = "n" ]; then
+  comment 'CCP compressors for PPP are only built as modules.'
+fi
+tristate 'EQL (serial line load balancing) support' CONFIG_EQUALIZER
+bool 'Cirrus Logic cs8900 ethernet' CONFIG_UCCS8900
+if [ "$CONFIG_UCCS8900" != "n" ]; then
+	bool 'Hardware byte-swapping support for cs8900 ethernet' CONFIG_UCCS8900_HW_SWAP
+fi
+bool 'SMC 9194 ethernet' CONFIG_SMC9194
+bool 'NE2000/NE1000 ISA ethernet' CONFIG_NE2000
+if [ "$CONFIG_NE2000" = "y" ]; then
+  hex 'NE2000 (or Compatible) Base Address' CONFIG_NE_BASE 0x200000
+  int 'NE2000 (or Compatible) Used IRQ'     CONFIG_NE_IRQ  5
+fi
+
+fi
+endmenu
+fi
+
+source fs/Config.in
+
+mainmenu_option next_comment
+comment 'Character devices'
+
+# tristate 'Parallel printer support' CONFIG_PRINTER
+# bool 'Support for user misc device modules' CONFIG_UMISC
+bool 'Hitachi SCI serial support' CONFIG_HITACHI_SCI
+if [ "$CONFIG_HITACHI_SCI" = "y" ]; then
+  int 'Serial Console Channel' CONFIG_CONSOLE_CHANNEL
+  choice 'Console Baudrate'                \
+         "2400BPS  CONFIG_CONSOLE_2400BPS  \
+          4800BPS  CONFIG_CONSOLE_4800BPS  \
+          9600BPS  CONFIG_CONSOLE_9600BPS  \
+          19200BPS CONFIG_CONSOLE_19200BPS \
+          38400BPS CONFIG_CONSOLE_38400BPS"
+fi
+
+# bool 'Support for user serial device modules' CONFIG_USERIAL
+bool 'Watchdog Timer Support'	CONFIG_WATCHDOG
+# if [ "$CONFIG_WATCHDOG" != "n" ]; then
+#   bool '   Disable watchdog shutdown on close' CONFIG_WATCHDOG_NOWAYOUT
+#   bool '   Software Watchdog' CONFIG_SOFT_WATCHDOG
+# fi
+endmenu
+
+# mainmenu_option next_comment
+# comment 'Sound support'
+#
+# tristate 'Sound support' CONFIG_SOUND
+# endmenu
+
+mainmenu_option next_comment
+comment 'Kernel hacking'
+
+# bool 'Debug kmalloc/kfree' CONFIG_DEBUG_MALLOC
+bool 'Kernel profiling support' CONFIG_PROFILE
+if [ "$CONFIG_PROFILE" = "y" ]; then
+  int ' Profile shift count' CONFIG_PROFILE_SHIFT 2
+fi
+if [ "$CONFIG_COLDFIRE" = "y" ]; then
+	bool 'Magic SysRq Key' CONFIG_MAGIC_SYSRQ
+	bool 'Panic/Dump to FLASH' CONFIG_DUMPTOFLASH
+fi
+endmenu

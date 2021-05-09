@@ -1,0 +1,13 @@
+# uClinux H8/300 Target Board Selection Menu
+
+choice 'Target Board' \
+	"generic	                     CONFIG_BOARD_GENERIC \
+	 Akizuki_H8/3068_Network_Board       CONFIG_BOARD_AKI3068NET"
+
+if [ "$CONFIG_BOARD_AKI3068NET" = "y" ]; then
+  define_bool CONFIG_H83068 y
+  define_int  CONFIG_CLK_FREQ 20000
+  define_bool CONFIG_RAMKERNEL y
+fi
+
+

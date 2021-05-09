@@ -1,0 +1,6 @@
+#define UTS_VERSION "1 Sun May 9 12:32:31 BST 2021"
+#define LINUX_COMPILE_TIME "12:32:31"
+#define LINUX_COMPILE_BY "stevejordan"
+#define LINUX_COMPILE_HOST "ubuntu"
+#define LINUX_COMPILE_DOMAIN ""
+#define LINUX_COMPILER "gcc version 2.95.3 20010315 (release)(ColdFire patches - 20010318 from http://fiddes.net/coldfire/)(uClinux XIP and shared lib patches from http://www.snapgear.com/)"
